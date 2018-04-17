@@ -74,7 +74,7 @@ func (manager *Manager) CreateFromFile(name string, filename string) (*Script, e
 func (manager *Manager) Create(name string, script string) (*Script, error) {
 	exists, err := manager.Exists(name)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to check if script %s exists")
+		return nil, errors.Wrapf(err, "failed to check if script %s exists", name)
 	}
 
 	method := "POST"
