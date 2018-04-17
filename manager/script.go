@@ -67,7 +67,7 @@ func (script *Script) Execute(reader io.Reader) (string, error) {
 	}
 
 	if resp.StatusCode != 200 {
-		return "", errors.Errorf("creation of user replication script failed, server returned %v", resp.StatusCode)
+		return "", errors.Errorf("creation of script failed, server returned %v", resp.StatusCode)
 	}
 
 	defer resp.Body.Close()
