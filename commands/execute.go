@@ -15,7 +15,7 @@ import (
 func init() {
 	register(cli.Command{
 		Name:   "execute",
-		Usage:  "upload and executes the given script",
+		Usage:  "upload and execute the given script",
 		Action: Execute,
 		Flags: []cli.Flag{
 			cli.StringFlag{
@@ -35,18 +35,18 @@ func init() {
 }
 
 // Execute upload and executes the given script
-func Execute(c *cli.Context) error {
-	manager, err := createManager(c)
+func Execute(context *cli.Context) error {
+	manager, err := createManager(context)
 	if err != nil {
 		return err
 	}
 
-	filename := c.Args().First()
+	filename := context.Args().First()
 	if filename == "" {
 		return cli.NewExitError("filename argument is required", 1)
 	}
 
-	name := c.String("name")
+	name := context.String("name")
 	if name == "" {
 		name = strings.TrimSuffix(path.Base(filename), filepath.Ext(filename))
 	}
@@ -57,8 +57,8 @@ func Execute(c *cli.Context) error {
 	}
 
 	var result string
-	filePayload := c.String("file-payload")
-	payload := c.String("payload")
+	filePayload := context.String("file-payload")
+	payload := context.String("payload")
 
 	if filePayload != "" && payload != "" {
 		return cli.NewExitError("only one of the parameters can be used: payload or file-payload", 2)

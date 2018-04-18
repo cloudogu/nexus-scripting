@@ -54,24 +54,24 @@ func (script *Script) ExecuteWithoutPayload() (string, error) {
 
 // Execute executes the script with the given payload
 func (script *Script) Execute(reader io.Reader) (string, error) {
-	req, err := http.NewRequest("POST", script.url, reader)
+	request, err := http.NewRequest("POST", script.url, reader)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to create request")
 	}
-	req.Header.Set("Content-Type", "text/plain")
-	req.SetBasicAuth(script.username, script.password)
+	request.Header.Set("Content-Type", "text/plain")
+	request.SetBasicAuth(script.username, script.password)
 
-	resp, err := script.client.Do(req)
+	response, err := script.client.Do(request)
 	if err != nil {
 		return "", errors.Wrapf(err, "failed to create script")
 	}
 
-	if resp.StatusCode != 200 {
-		return "", errors.Errorf("creation of script failed, server returned %v", resp.StatusCode)
+	if response.StatusCode != 200 {
+		return "", errors.Errorf("creation of script failed, server returned %v", response.StatusCode)
 	}
 
-	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
+	defer response.Body.Close()
+	data, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return "", errors.Wrap(err, "failed to read response body")
 	}

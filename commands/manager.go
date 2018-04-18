@@ -5,18 +5,18 @@ import (
 	"github.com/urfave/cli"
 )
 
-func createManager(c *cli.Context) (*manager.Manager, error) {
-	url := c.GlobalString("url")
+func createManager(context *cli.Context) (*manager.Manager, error) {
+	url := context.GlobalString("url")
 	if url == "" {
 		return nil, cli.NewExitError("url is required", 1)
 	}
 
-	username := c.GlobalString("username")
+	username := context.GlobalString("username")
 	if username == "" {
 		return nil, cli.NewExitError("username is required", 1)
 	}
 
-	password := c.GlobalString("password")
+	password := context.GlobalString("password")
 	if password == "" {
 		return nil, cli.NewExitError("password is required", 1)
 	}

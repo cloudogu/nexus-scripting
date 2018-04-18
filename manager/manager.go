@@ -37,7 +37,7 @@ type Manager struct {
 	client *http.Client
 }
 
-// Get returns an script instance of the given name
+// Get returns a script instance of the given name
 func (manager *Manager) Get(name string) (*Script, error) {
 	exists, err := manager.Exists(name)
 	if err != nil {
@@ -48,10 +48,10 @@ func (manager *Manager) Get(name string) (*Script, error) {
 		return nil, errors.Wrapf(err, "script %s does not exists", name)
 	}
 
-	return manager.script(name), nil
+	return manager.getScript(name), nil
 }
 
-func (manager *Manager) script(name string) *Script {
+func (manager *Manager) getScript(name string) *Script {
 	return &Script{
 		url:      manager.scriptBaseUrl + "/" + name + "/run",
 		username: manager.username,
@@ -94,29 +94,29 @@ func (manager *Manager) Create(name string, script string) (*Script, error) {
 		return nil, err
 	}
 
-	return manager.script(name), nil
+	return manager.getScript(name), nil
 }
 
 // Exists returns true if a script exists with the given name
 func (manager *Manager) Exists(name string) (bool, error) {
-	req, err := http.NewRequest("GET", manager.scriptBaseUrl+"/"+name, nil)
+	request, err := http.NewRequest("GET", manager.scriptBaseUrl+"/"+name, nil)
 	if err != nil {
 		return false, errors.Wrapf(err, "failed to create request")
 	}
-	req.SetBasicAuth(manager.username, manager.password)
+	request.SetBasicAuth(manager.username, manager.password)
 
-	resp, err := manager.client.Do(req)
+	response, err := manager.client.Do(request)
 	if err != nil {
 		return false, errors.Wrapf(err, "failed to check if script exists")
 	}
 
-	if resp.StatusCode == http.StatusOK {
+	if response.StatusCode == http.StatusOK {
 		return true, nil
-	} else if resp.StatusCode == http.StatusNotFound {
+	} else if response.StatusCode == http.StatusNotFound {
 		return false, nil
 	}
 
-	return false, errors.Errorf("nexus respond with %v", resp.StatusCode)
+	return false, errors.Errorf("nexus respond with %v", response.StatusCode)
 }
 
 func (manager *Manager) createPayload(name string, script string) (io.Reader, error) {
@@ -135,20 +135,20 @@ func (manager *Manager) createPayload(name string, script string) (io.Reader, er
 }
 
 func (manager *Manager) executeUpload(method string, url string, payload io.Reader) error {
-	req, err := http.NewRequest(method, url, payload)
+	request, err := http.NewRequest(method, url, payload)
 	if err != nil {
 		return errors.Wrapf(err, "failed to create request")
 	}
-	req.Header.Set("Content-Type", "application/json")
-	req.SetBasicAuth(manager.username, manager.password)
+	request.Header.Set("Content-Type", "application/json")
+	request.SetBasicAuth(manager.username, manager.password)
 
-	resp, err := manager.client.Do(req)
+	response, err := manager.client.Do(request)
 	if err != nil {
 		return errors.Wrapf(err, "failed to create script")
 	}
 
-	if resp.StatusCode != 204 {
-		return errors.Errorf("creation of user replication script failed, server returned %v", resp.StatusCode)
+	if response.StatusCode != 204 {
+		return errors.Errorf("creation of user replication script failed, server returned %v", response.StatusCode)
 	}
 
 	return nil
