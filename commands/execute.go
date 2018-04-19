@@ -24,11 +24,11 @@ func init() {
 			},
 			cli.StringFlag{
 				Name:  "payload",
-				Usage: "payload argument for execution",
+				Usage: "payload argument for execution (json format)",
 			},
 			cli.StringFlag{
 				Name:  "file-payload",
-				Usage: "path to file which is used as payload argument for execution",
+				Usage: "path to file which is used as payload argument for execution (json format)",
 			},
 		},
 	})
