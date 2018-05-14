@@ -1,22 +1,31 @@
-APP=nexus-scripting
+# Set these to the desired values
+ARTIFACT_ID=nexus-scripting
 VERSION=0.1.0
 
-TARGETDIR=target
-PKG=${APP}-${VERSION}.tar.gz
-BINARY=${TARGETDIR}/${APP}
+MAKEFILES_VERSION= # Set this once we have a stable release
 
-default: build
+.DEFAULT_GOAL:=compile
 
-setup:
-	dep ensure
+include build/make/variables.mk
 
-$(BINARY): setup
-	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-X main.Version=${VERSION} -extldflags "-static"' -o $(BINARY) .
+include build/make/info.mk
 
-build: $(BINARY)
+include build/make/dependencies_godep.mk
 
-package: build
-	cd ${TARGETDIR}; tar cvfz ${PKG} ${APP}
+include build/make/build.mk
 
-clean:
-	rm -rf $(TARGETDIR)
+include build/make/unit-test.mk
+
+include build/make/static-analysis.mk
+
+include build/make/clean.mk
+
+include build/make/package-tar.mk
+
+.PHONY: update-makefiles
+update-makefiles:
+	@echo Updating makefiles...
+	@curl -L --silent https://github.com/cloudogu/makefiles/archive/v$(MAKEFILES_VERSION).tar.gz > $(TMPDIR)/makefiles-v$(MAKEFILES_VERSION).tar.gz
+
+	@tar -xzf $(TMPDIR)/makefiles-v$(MAKEFILES_VERSION).tar.gz -C $(TMPDIR)
+	@cp -r $(TMPDIR)/makefiles-$(MAKEFILES_VERSION)/build/make $(BUILDDIR)
