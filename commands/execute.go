@@ -30,6 +30,11 @@ func init() {
 				Name:  "file-payload",
 				Usage: "path to file which is used as payload argument for execution (json format)",
 			},
+			cli.IntFlag{
+				Name: "timeout",
+				Usage: "timeout for HTTP client requests",
+				Value: 30,
+			},
 		},
 	})
 }
@@ -40,6 +45,8 @@ func Execute(context *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
+	manager.WithTimeout(context.Int("timeout"))
 
 	filename := context.Args().First()
 	if filename == "" {

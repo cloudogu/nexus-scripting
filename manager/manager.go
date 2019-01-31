@@ -6,7 +6,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-
 	"time"
 
 	"github.com/pkg/errors"
@@ -35,6 +34,10 @@ type Manager struct {
 	password      string
 
 	client *http.Client
+}
+
+func (manager *Manager) WithTimeout(timeoutInSeconds int) {
+	manager.client.Timeout = time.Second * time.Duration(timeoutInSeconds)
 }
 
 // Get returns a script instance of the given name
