@@ -1,22 +1,16 @@
-APP=nexus-scripting
+MAKEFILES_VERSION=10.6.0
+GOTAG=1.26.0
+ARTIFACT_ID=nexus-scripting
 VERSION=0.3.0
 
-TARGETDIR=target
-PKG=${APP}-${VERSION}.tar.gz
-BINARY=${TARGETDIR}/${APP}
+.DEFAULT_GOAL:=compile-generic
 
-default: build
-
-setup:
-	dep ensure
-
-$(BINARY): setup
-	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-X main.Version=${VERSION} -extldflags "-static"' -o $(BINARY) .
-
-build: $(BINARY)
-
-package: build
-	cd ${TARGETDIR}; tar cvfz ${PKG} ${APP}
-
-clean:
-	rm -rf $(TARGETDIR)
+include build/make/variables.mk
+include build/make/self-update.mk
+include build/make/release.mk
+include build/make/prerelease.mk
+include build/make/build.mk
+include build/make/test-common.mk
+include build/make/test-unit.mk
+include build/make/package-tar.mk
+include build/make/clean.mk
