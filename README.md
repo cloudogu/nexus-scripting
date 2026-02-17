@@ -2,11 +2,6 @@
 
 nexus-scripting provides an go api and a command line interface for the scripting api Sonatype Nexus 3
 
-## Requirements
-
-* [Go](https://golang.org/) >= 1.10
-* [Dep](https://golang.github.io/dep/)
-
 ## Testing
 
 * build
