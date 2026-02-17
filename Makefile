@@ -1,7 +1,7 @@
 MAKEFILES_VERSION=10.6.0
 GOTAG=1.26.0
 ARTIFACT_ID=nexus-scripting
-VERSION=0.3.0
+VERSION=0.3.2
 
 .DEFAULT_GOAL:=compile-generic
 
